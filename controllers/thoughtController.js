@@ -1,16 +1,15 @@
-const { ObjectId } = require('mongoose').Types;
 const { Thought, User } = require('../models');
 
 module.exports = {
     getThoughts(req, res) {
       Thought.find()
-        .then((thoughts) => res.join(thoughts))
+        .then((thoughts) => res.json(thoughts))
         .catch((err) => {
           console.log(err);
           return res.status(500).json(err);
         });
     },
-    // Get a single student
+
     getSingleThought(req, res) {
       Thought.findOne({ _id: req.params.thoughtId })
         .select('-__v')
@@ -27,7 +26,10 @@ module.exports = {
 
     createThought(req, res) {
       Thought.create(req.body)
-        .then((thought) => res.json(thought))
+        .then((thought) => {
+          User.findOneAndUpdate({username: req.body.username}, { $addToSet: thought._id })
+          res.json(thought)
+        })
         .catch((err) => res.status(500).json(err));
     },
 
