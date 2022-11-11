@@ -9,7 +9,7 @@ module.exports = {
 
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
-            .select('-__v')
+            .populate(thoughts)
             .then((user) => 
                 !user
                     ? res.status(404).json({ message: 'No user with that id found '})
@@ -51,4 +51,37 @@ module.exports = {
                     )
             .catch((err) => res.status(500).json(err));
     },
+
+    addFriend(req, res) {
+        User.findOneAndUpdate(
+          { _id: req.params.userId },
+          { $addToSet: { friends: req.body } },
+          { runValidators: true, new: true }
+        )
+          .then((user) =>
+            !user
+              ? res
+                  .status(404)
+                  .json({ message: 'No user found with that ID :(' })
+              : res.json(user)
+          )
+          .catch((err) => res.status(500).json(err));
+        },
+
+    removeFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $pull: { friends: { friendId: req.params.friendId } } },
+            { runValidators: true, new: true }
+          )
+            .then((thought) =>
+              !thought
+                ? res
+                    .status(404)
+                    .json({ message: 'No thought found with that ID :(' })
+                : res.json(student)
+            )
+            .catch((err) => res.status(500).json(err));
+        },
+    
 };
