@@ -28,8 +28,12 @@ module.exports = {
       Thought.create(req.body)
         .then((thought) => {
           User.findOneAndUpdate({_id: req.body.userId}, { $push: {thoughts: thought._id} })
-          console.log(thought)
-          res.json(thought)
+          .then((user) => 
+            !user
+            ? res.status(404).json({ message: 'No user with that id found'})
+            : res.json(user)
+          )
+         
         })
         .catch((err) => res.status(500).json(err));
     },
