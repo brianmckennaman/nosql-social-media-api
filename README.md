@@ -8,4 +8,4 @@ Then, I created controllers for the users and thoughts to allow CRUD operations,
 
 Finally, I created routes allowing the data to be accessed using backend tester Insomnia.
 
-A video walkthough showcasing the app's functionality can be found here: 
+A video walkthough showcasing the app's functionality can be found here: https://drive.google.com/file/d/1VPFtjEKkeq9bCxDxb4KQx9sOSVZwiJg1/view
