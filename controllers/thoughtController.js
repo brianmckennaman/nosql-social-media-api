@@ -38,6 +38,19 @@ module.exports = {
         .catch((err) => res.status(500).json(err));
     },
 
+    updateThought(req, res) {
+      Thought.findByIdAndUpdate(
+        { _id: req.params.thoughtId},
+        { $set: req.body },
+        { runValidators: true, new: true }
+      )
+        .then((thought) =>
+          !thought
+            ? res.status(404).json({ message: 'No thought with that id found'})
+            : res.json(thought))
+        .catch((err) => res.status(500).json(err))
+    },
+
     deleteThought(req, res) {
       Thought.findOneAndRemove({ _id: req.params.thoughtId })
         .then((thought) =>
@@ -84,7 +97,7 @@ module.exports = {
     removeReaction(req, res) {
       Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $pull: { reaction: { reactionId: req.params.reactionId } } },
+        { $pull: { reactions: { reactionId: req.params.reactionId } } },
         { runValidators: true, new: true }
       )
         .then((thought) =>
@@ -92,7 +105,7 @@ module.exports = {
             ? res
                 .status(404)
                 .json({ message: 'No thought found with that ID :(' })
-            : res.json(student)
+            : res.json(thought)
         )
         .catch((err) => res.status(500).json(err));
     },
